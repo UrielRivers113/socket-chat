@@ -25,14 +25,17 @@ io.on('connection', (client) => {
         //Este evento se va a disparar cuando alguien entra al chat o sale del chat
         client.broadcast.to(data.sala).emit('listaPersona', usuarios.getPersonasPorSala(data.sala));
         //Este evento también lo necesitamos cuando alguien se desconecta, así que lo copiamos abajo también
+        client.broadcast.to(data.sala).emit('crearMensaje', crearMensaje('Administrador', `${data.nombre} se unió`));
         callback(usuarios.getPersonasPorSala(data.sala));
     });
 
     //Para enviar mensaje a todo el grupo
-    client.on('crearMensaje', (data) => {
+    client.on('crearMensaje', (data, callback) => {
         let persona = usuarios.getPersona(client.id)
         let mensaje = crearMensaje(persona.nombre, data.mensaje);
-        client.broadcast.to(persona.sala).emit('crearMensaje', mensaje)
+        client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+
+        callback(mensaje);
     });
 
 

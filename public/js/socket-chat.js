@@ -18,7 +18,8 @@ socket.on('connect', function() {
     //Para que el server sepa que usuario se conectó
     //Si yo me conecto o el server me acepta, tengo que ejecutar un callback
     socket.emit('entrarChat', usuario, function(resp) {
-        console.log('Usuarios conectados: ', resp);
+        //console.log('Usuarios conectados: ', resp);
+        renderizarUsuarios(resp);
     });
     //configurarmos 'entrarChat' en socket.js
 });
@@ -42,11 +43,14 @@ socket.on('disconnect', function() {
 // Escuchar información
 socket.on('crearMensaje', function(mensaje) {
     console.log('Servidor:', mensaje);
+    renderizarMensajes(mensaje, false);
+    scrollBottom();
 });
 
 //Escuchar cambios de usuarios (Cuando un usuario entra o sale del chat)
 socket.on('listaPersona', function(personas) { //(el nombre personas me lo acabo de inventar :p)
     console.log(personas);
+    renderizarUsuarios(personas)
 });
 
 
